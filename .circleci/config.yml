@@ -6,13 +6,14 @@ orbs:
   slack: circleci/slack@4.9.4
 
 commands:
+# DM on slack for the failure at any step
   notify_on_failure:
     steps:
       - slack/notify:
           channel: D03573PHF4N
           event: fail
           template: basic_fail_1
-
+#so reprtitive parts of code
   install_awscli:
     description: "Installs AWS_CLI"
     steps:
@@ -84,7 +85,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-depnd]
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -93,7 +94,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-depnd
+          key: frontend-build
       - notify_on_failure
 
   build-backend:
@@ -102,7 +103,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
@@ -111,7 +112,7 @@ jobs:
             npm run build 
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-depnd
+          key: backend-build
       - notify_on_failure
 
   test-frontend:
@@ -120,7 +121,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-depnd]
+          keys: [frontend-build]
       - run:
           name: Frontend unit test
           command: |
@@ -134,7 +135,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Backend unit test
           command: |
@@ -149,13 +150,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-depnd]
+          keys: [frontend-build]
       - run:
           name: Frontend scan
           command: |
             cd frontend
             npm install
-            npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
       - notify_on_failure
@@ -166,13 +166,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Backend scan
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
       - notify_on_failure
@@ -242,7 +241,7 @@ jobs:
       - checkout
       - install_awscli
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
@@ -269,7 +268,7 @@ jobs:
       - install_awscli
       - install_nodejs
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Install dependencies
           command: |
@@ -295,7 +294,7 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
-                    
+
   deploy-backend:
     docker:
       - image: cimg/base:2022.04
@@ -309,7 +308,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - restore_cache:
-          keys: [backend-depnd]
+          keys: [backend-build]
       - run:
           name: Install dependencies
           command: |
