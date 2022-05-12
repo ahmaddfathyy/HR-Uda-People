@@ -1,5 +1,5 @@
 version: 2.1
-
+#KVDB Bucket ID : R3by8dnVoPGwzahYCSzQk
 orbs: 
   node: circleci/node@5.0.2
   slack: circleci/slack@4.9.4
@@ -68,7 +68,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration-<< parameters.Workflow_ID >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/R3by8dnVoPGwzahYCSzQk/migration-<< parameters.Workflow_ID >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -223,7 +223,7 @@ jobs:
       - install_awscli
       - install_ansible
       - add_ssh_keys:
-          fingerprints: ["5f:14:6b:6c:f9:f7:cc:34:80:43:51:c2:fc:a9:67:89"]
+          fingerprints: ["43:81:8a:1c:82:fb:54:21:6a:9a:52:e1:5f:4a:cb:63"]
       - attach_workspace:
           at: ~/
       - run:
@@ -255,7 +255,7 @@ jobs:
             cd backend
             if grep -q "No migrations are pending" migrations_output.txt
             then
-              curl -d '1' https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} 
+              curl -d '1' https://kvdb.io/R3by8dnVoPGwzahYCSzQk/migration_${CIRCLE_WORKFLOW_ID:0:7} 
             fi
       - destroy-environment
       - revert-migrations
@@ -304,7 +304,7 @@ jobs:
       - install_ansible
       - install_nodejs
       - add_ssh_keys:
-          fingerprints: ["5f:14:6b:6c:f9:f7:cc:34:80:43:51:c2:fc:a9:67:89"]
+          fingerprints: ["43:81:8a:1c:82:fb:54:21:6a:9a:52:e1:5f:4a:cb:63"]
       - attach_workspace:
           at: ~/
       - restore_cache:
