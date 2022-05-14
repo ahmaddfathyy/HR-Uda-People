@@ -188,7 +188,7 @@ jobs:
           name: "installing tar and gzip"
           command: yum install -y tar gzip
       - run:
-          name: create backend infrastructure
+          name: Ensure backend infrastructire exist
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
@@ -196,7 +196,7 @@ jobs:
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
             --tags project=project3
       - run:
-          name: creating frontend infrastructure
+          name: Ensure frontend infrastructire exist
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
