@@ -365,7 +365,7 @@ jobs:
             FRONTEND_TEST=http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com
             if curl -s $FRONTEND_TEST | grep "Welcome"
             then 
-                exit 1
+                exit 0
             else
                 exit 1
             fi
@@ -404,17 +404,23 @@ jobs:
         - run:
             name: Get old stack workflow id
             command: |
-              export OldWorkflowID="$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)"
-
+              export OldWorkflowID=$(aws cloudformation \
+                      list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                      --no-paginate --output text)
               echo OldWorkflowID: "${OldWorkflowID}"
-              
-              echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
-
+              echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-              echo Stack names: "${STACKS[@]}"
+                      --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+              echo Stack names: "${STACKS[@]}"   
+              if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
+              then
+              echo "-----------------------------DELETE COMPLETE-----------------------------"
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              else
+              echo "-----------------------------DELETE CANNOT BE PERFORMED-----------------------------"
+              fi
 
   notify_on_success:
     docker:
@@ -453,22 +459,22 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
-      # - notify_on_success:
-      #     requires: 
-      #       - build-frontend
-      #       - build-backend
-      #       - test-frontend
-      #       - test-backend
-      #       - scan-backend
-      #       - scan-frontend
-      #       - deploy-infrastructure
-      #       - run-migrations
-      #       - deploy-frontend
-      #       - deploy-backend
-      #       - smoke-test
-      #       - cloudfront-update
-      #       - cleanup
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
+      - notify_on_success:
+          requires: 
+            - build-frontend
+            - build-backend
+            - test-frontend
+            - test-backend
+            - scan-backend
+            - scan-frontend
+            - deploy-infrastructure
+            - run-migrations
+            - deploy-frontend
+            - deploy-backend
+            - smoke-test
+            - cloudfront-update
+            - cleanup
