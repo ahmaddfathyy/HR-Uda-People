@@ -172,11 +172,11 @@ jobs:
       - run:
           name: Backend scan
           command: |
-            cd backend
+#            cd backend
             npm install
 #            npm audit fix --audit-level=critical --force
 #            npm audit fix --audit-level=critical --force
-#            npm audit --audit-level=critical
+            npm audit --audit-level=critical
       - notify_on_failure
       
   deploy-infrastructure:
@@ -438,3 +438,37 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+      # - deploy-infrastructure:
+      #      requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #      filters:
+      #       branches:
+      #         only: [master]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
+      # - notify_on_success:
+      #     requires: 
+      #       - build-frontend
+      #       - build-backend
+      #       - test-frontend
+      #       - test-backend
+      #       - scan-backend
+      #       - scan-frontend
+      #       - deploy-infrastructure
+      #       - run-migrations
+      #       - deploy-frontend
+      #       - deploy-backend
+      #       - smoke-test
+      #       - cloudfront-update
+      #       - cleanup
