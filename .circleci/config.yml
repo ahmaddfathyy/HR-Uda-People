@@ -1,6 +1,6 @@
 version: 2.1
 # KVDB Bucket ID : R3by8dnVoPGwzahYCSzQk
-# Slack Channel ID : D03573PHF4N
+# Slack Channel ID : C03FUNUEMC7
 orbs: 
   node: circleci/node@5.0.2
   slack: circleci/slack@4.9.4
@@ -10,7 +10,7 @@ commands:
   notify_on_failure:
     steps:
       - slack/notify:
-          channel: D03573PHF4N
+          channel: C03FUNUEMC7
           event: fail
           template: basic_fail_1
           
@@ -415,9 +415,9 @@ jobs:
               if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
               then
               echo "-----------------------------DELETE COMPLETE-----------------------------"
-              #  aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              #  aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              #  aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               else
               echo "-----------------------------DELETE CANNOT BE PERFORMED-----------------------------"
               fi
