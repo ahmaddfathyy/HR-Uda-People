@@ -1,6 +1,6 @@
 URL01 --> Github repo : https://github.com/ahmaddfathyy/HR-Uda-People
-URL02 --> S3 bucket : http://udapeople-261a2fb.s3-website-us-east-1.amazonaws.com
+URL02 --> S3 bucket : http://udapeople-29c9a6d.s3-website-us-east-1.amazonaws.com
 URL03 --> Cloudfront : https://d1fa5sk0oi5n3x.cloudfront.net
-URL04 --> Backend: http://54.82.69.87:3030/api/status
-URL05 --> Prometheus : ec2-54-197-36-221.compute-1.amazonaws.com:9090
-URL05 --> circle ci invite in case you needed to see any missign screen shot : https://app.circleci.com/pipelines/github/ahmaddfathyy/HR-Uda-People?invite=true
+URL04 --> Backend: http://3.95.239.35:3030/api/status
+URL05 --> Prometheus : http://54.236.224.173:9090/
+URL06 --> circle ci invite in case you needed to see any missign screen shot : https://app.circleci.com/pipelines/github/ahmaddfathyy/HR-Uda-People?invite=true
