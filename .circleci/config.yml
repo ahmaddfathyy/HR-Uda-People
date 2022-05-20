@@ -157,9 +157,9 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
+            # npm audit fix --audit-level=critical --force
+            # npm audit fix --audit-level=critical --force
+            # npm audit --audit-level=critical
       - notify_on_failure
 
   scan-backend:
@@ -392,7 +392,7 @@ jobs:
             --tags project=udapeople    
       - destroy-environment
       - revert-migrations
-
+ 
   cleanup:
       docker:
         - image: cimg/base:2022.04 
